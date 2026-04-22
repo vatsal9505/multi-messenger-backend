@@ -13,28 +13,22 @@ import org.springframework.web.bind.annotation.RestController;
 import com.project.multimessenger.dto.LoginRequest;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "*")
 @RequestMapping("/auth")
 public class AuthController {
 
-@PostMapping("/login")
-public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
 
-    String email = request.getEmail();
-    String password = request.getPassword();
-
-    if ("admin".equals(email) && "1234".equals(password)) {
+        if ("admin".equals(request.getEmail()) && "1234".equals(request.getPassword())) {
+            Map<String, String> response = new HashMap<>();
+            response.put("token", "demo-token");
+            response.put("message", "Login successful");
+            return ResponseEntity.ok(response);
+        }
 
         Map<String, String> response = new HashMap<>();
-        response.put("token", "demo-token");
-        response.put("message", "Login successful");
-
-        return ResponseEntity.ok(response);
+        response.put("message", "Invalid credentials");
+        return ResponseEntity.status(401).body(response);
     }
-
-    Map<String, String> error = new HashMap<>();
-    error.put("message", "Invalid credentials");
-
-    return ResponseEntity.status(401).body(error);
-}
 }
