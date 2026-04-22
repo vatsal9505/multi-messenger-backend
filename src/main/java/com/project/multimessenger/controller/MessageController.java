@@ -15,7 +15,7 @@ import com.project.multimessenger.dto.MessageRequest;
 import com.project.multimessenger.service.MessageService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "https://multi-messenger-frontend-hqyvdv66v-umg2.vercel.app")
 public class MessageController {
 
     @Autowired
