@@ -17,18 +17,24 @@ import com.project.multimessenger.dto.LoginRequest;
 @RequestMapping("/auth")
 public class AuthController {
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+@PostMapping("/login")
+public ResponseEntity<?> login(@RequestBody LoginRequest request) {
 
-        if ("admin".equals(request.getEmail()) && "1234".equals(request.getPassword())) {
-            Map<String, String> response = new HashMap<>();
-            response.put("token", "demo-token");
-            response.put("message", "Login successful");
-            return ResponseEntity.ok(response);
-        }
+    String email = request.getEmail();
+    String password = request.getPassword();
+
+    if ("admin".equals(email) && "1234".equals(password)) {
 
         Map<String, String> response = new HashMap<>();
-        response.put("message", "Invalid credentials");
-        return ResponseEntity.status(401).body(response);
+        response.put("token", "demo-token");
+        response.put("message", "Login successful");
+
+        return ResponseEntity.ok(response);
     }
+
+    Map<String, String> error = new HashMap<>();
+    error.put("message", "Invalid credentials");
+
+    return ResponseEntity.status(401).body(error);
+}
 }
