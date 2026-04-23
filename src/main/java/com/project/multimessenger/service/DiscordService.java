@@ -13,44 +13,50 @@ public class DiscordService {
 
     private JDA jda;
 
-    @Value("${discord.bot.token}")
+    @Value("${DISCORD_BOT_TOKEN}")
     private String token;
 
     @PostConstruct
     public void init() {
         try {
+            System.out.println("Starting Discord Bot...");
+
             if (token == null || token.trim().isEmpty()) {
-                System.out.println("Discord token is missing");
+                System.out.println("Discord token missing");
                 return;
             }
 
-            jda = JDABuilder.createDefault(token).build();
-            jda.awaitReady();
-            System.out.println("Discord connected!");
+            jda = JDABuilder.createDefault(token).build().awaitReady();
+
+            System.out.println("Discord Bot Connected Successfully!");
+
         } catch (Exception e) {
-            System.out.println("Discord failed to start: " + e.getMessage());
+            System.out.println("Discord startup failed:");
+            e.printStackTrace();
         }
     }
 
     public boolean sendMessage(String channelId, String message) {
         try {
             if (jda == null) {
-                System.out.println("Discord JDA is not initialized");
+                System.out.println("JDA not initialized");
                 return false;
             }
 
             TextChannel channel = jda.getTextChannelById(channelId);
 
             if (channel == null) {
-                System.out.println("Channel not found");
+                System.out.println("Channel not found: " + channelId);
                 return false;
             }
 
-            channel.sendMessage(message).complete();
+            channel.sendMessage(message).queue();
+
             return true;
 
         } catch (Exception e) {
-            System.out.println("Discord send failed: " + e.getMessage());
+            System.out.println("Discord send failed:");
+            e.printStackTrace();
             return false;
         }
     }
