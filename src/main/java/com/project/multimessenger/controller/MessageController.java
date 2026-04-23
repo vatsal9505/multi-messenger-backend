@@ -15,7 +15,7 @@ import com.project.multimessenger.dto.MessageRequest;
 import com.project.multimessenger.service.MessageService;
 
 @RestController
-@CrossOrigin(origins = "https://multi-messenger-frontend-hqyvdv66v-umg2.vercel.app")
+@CrossOrigin(origins = "*")
 public class MessageController {
 
     @Autowired
@@ -33,6 +33,7 @@ public class MessageController {
 
     @PostMapping("/sendMessage")
     public ResponseEntity<?> sendMessage(@RequestBody MessageRequest request) {
+
         String result = messageService.processMessage(request);
 
         Map<String, String> response = new HashMap<>();
