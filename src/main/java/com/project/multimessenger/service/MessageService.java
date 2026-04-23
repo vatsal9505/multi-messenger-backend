@@ -58,8 +58,11 @@ public class MessageService {
             System.out.println("Incoming userId = [" + request.getUserId() + "]");
             System.out.println("Incoming message = [" + request.getMessage() + "]");
 
-            Optional<Platform> platformOpt =
-                    platformRepository.findByPlatformNameIgnoreCase(platformName);
+            Optional<Platform> platformOpt = platformRepository.findAll()
+                    .stream()
+                    .filter(p -> p.getPlatformName() != null
+                            && p.getPlatformName().trim().equalsIgnoreCase(platformName))
+                    .findFirst();
 
             if (platformOpt.isEmpty()) {
                 return "Platform not found in database";
@@ -117,6 +120,8 @@ public class MessageService {
             URL url = new URL(urlString);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
+            connection.setConnectTimeout(10000);
+            connection.setReadTimeout(10000);
 
             int responseCode = connection.getResponseCode();
 
@@ -139,7 +144,7 @@ public class MessageService {
             if (responseCode == 200) {
                 return "Message sent successfully to Telegram";
             } else {
-                return "Telegram send failed";
+                return "Telegram send failed: " + response;
             }
 
         } catch (Exception e) {
